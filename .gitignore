@@ -13,7 +13,9 @@ data/
 .coverage
 .coverage.*
 htmlcov/
-
+schemes.py
+llm_nlu.py
+nlu.pu
 # Build artifacts
 build/
 dist/
