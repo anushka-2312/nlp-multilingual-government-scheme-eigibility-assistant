@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scheme Mitra – Government Scheme Assistant</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1c2230;--mut:#667085;--acc:#e8590c;--me:#fff3e8;--line:#e4e7ec}
+@media(prefers-color-scheme:dark){:root{--bg:#10131a;--card:#1a1f2b;--ink:#e8eaf0;--mut:#98a2b3;--me:#3a2412;--line:#2a3141}}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,"Noto Sans Devanagari",sans-serif;background:var(--bg);color:var(--ink);display:flex;justify-content:center}
+main{width:100%;max-width:760px;height:100dvh;display:flex;flex-direction:column;padding:12px}
+h1{font-size:18px;margin:4px 0 8px}#log{flex:1;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:4px}
+.m{max-width:92%;padding:10px 14px;border-radius:14px;white-space:pre-wrap;background:var(--card);border:1px solid var(--line)}
+.me{align-self:flex-end;background:var(--me)}.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+form{display:flex;gap:8px;margin-top:8px}input{flex:1;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+button.send{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:0 18px;font:inherit;cursor:pointer}
+</style></head><body><main>
+<h1>🇮🇳 Scheme Mitra <span style="color:var(--mut);font-weight:400">· English · हिन्दी · मराठी</span></h1>
+<div id="log" aria-live="polite"></div>
+<div class="chips" id="chips"></div>
+<form id="f"><input id="q" autocomplete="off" placeholder="Describe yourself and what help you need…" autofocus><button class="send">Send</button></form>
+</main><script>
+const log=document.getElementById('log'),q=document.getElementById('q');let sid=null;
+const ex=["I am a 45 year old farmer from Pune with 2 acres of land and family income 1.5 lakh","मैं 65 साल का हूँ, बीपीएल परिवार से, पेंशन चाहिए","मी २२ वर्षांची SC विद्यार्थिनी आहे, उत्पन्न २ लाख, शिष्यवृत्ती हवी","I am a carpenter and want a business loan"];
+const chips=document.getElementById('chips');ex.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=t.slice(0,38)+'…';b.onclick=()=>send(t);chips.appendChild(b)});
+function add(t,me){const d=document.createElement('div');d.className='m'+(me?' me':'');d.textContent=t;log.appendChild(d);log.scrollTop=log.scrollHeight}
+async function send(t){if(!t.trim())return;add(t,true);q.value='';chips.style.display='none';
+ try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sid,message:t})});const j=await r.json();sid=j.session_id;document.documentElement.lang=j.lang;add(j.reply)}catch(e){add('⚠️ '+e)}}
+document.getElementById('f').onsubmit=e=>{e.preventDefault();send(q.value)};
+add("Namaste! Tell me about yourself — age, state, occupation, family income and the help you need. नमस्ते! अपने बारे में बताइए। नमस्कार! तुमच्याबद्दल सांगा.");
+</script></body></html>
